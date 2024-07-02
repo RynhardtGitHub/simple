@@ -51,6 +51,8 @@ io.on('connection', (socket) => {
     socket.on('start', () => {
         let maze = new Maze(difficulty, difficulty);
 
+        console.log(`Emitting maze: ${JSON.stringify(maze)}`)
+
         io.emit('maze', maze);
 
     });
