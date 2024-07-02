@@ -3,10 +3,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const messageElement = document.getElementById('message');
+    let ball = null;
+    let mazeDrawer = null;
 
-    const initialX = canvas.width / 2;
-    const initialY = canvas.height / 2;
-    let ball = { x: initialX, y: initialY, radius: 10 };
+    // const initialX = canvas.width / 2;
+    // const initialY = canvas.height / 2;
+    // let ball = { x: initialX, y: initialY, radius: 10 };
+    socket.on('initialUpdate', (data) => {
+        console.log('Received initialUpdate:', data);
+        messageElement.textContent = data.message;
+
+        // Receive map from server
+        socket.on('maze', (maze) => {
+            mazeDrawer = new DrawMaze(maze, ctx, 20);
+        });
+
+        // Initialize the ball
+        ball = {
+            x: data.ballPosition.x,
+            y: data.ballPosition.y,
+            radius: 5, 
+            color: 'blue'
+        };
+        drawBall(ball); 
+    });
 
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
         DeviceMotionEvent.requestPermission().then(response => {

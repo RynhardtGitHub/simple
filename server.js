@@ -16,7 +16,6 @@ const MAX_DATA_POINTS = 10;
 // Difficulty progression
 let difficulty = 5;
 let difficultyAdd = 5;
-let maze = new Maze(difficulty, difficulty);
 
 app.use(express.static('public'));
 
@@ -49,7 +48,10 @@ io.on('connection', (socket) => {
     });
 
     // Feed map to players
-    socket.on('')
+    socket.on('start', () => {
+        let maze = new Maze(difficulty, difficulty);
+        io.emit('maze', maze);
+    });
 });
 
 const port = 8080;
