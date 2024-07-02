@@ -18,26 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('start');
     }
 
-    // Setup maze
-    socket.on('initialUpdate', (data) => {
-        console.log('Received initialUpdate:', data);
-        messageElement.textContent = data.message;
+    // Receive map from server
+    socket.on('maze', (maze) => {
+        mazeDrawer = new DrawMaze(maze, ctx, 20);
 
-        // Receive map from server
-        socket.on('maze', (maze) => {
-            mazeDrawer = new DrawMaze(maze, ctx, 20);
+        console.log('Maze received');
 
-            console.log('Maze received');
-
-            // Initialize the ball
-            ball = {
-                x: maze.startCoord.x,
-                y: maze.startCoord.y,
-                radius: 5, 
-                color: 'blue'
-            };
-            drawBall(ball); 
-        });
+        // Initialize the ball
+        ball = {
+            x: maze.startCoord.x,
+            y: maze.startCoord.y,
+            radius: 5, 
+            color: 'blue'
+        };
+        drawBall(ball); 
     });
 
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
