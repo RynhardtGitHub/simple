@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize the ball
         ball = {
-            x: data.ballPosition.x,
-            y: data.ballPosition.y,
+            x: data.startCoord.x,
+            y: data.startCoord.y,
             radius: 5, 
             color: 'blue'
         };
