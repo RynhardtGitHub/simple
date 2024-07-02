@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mazeDrawer = new DrawMaze(maze, ctx, 20);
 
         console.log('Maze received');
+        startButton.style.visibility = "hidden"; 
+        messageElement.style.visibility = "hidden"; 
 
         // Initialize the ball
         ball = {
