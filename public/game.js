@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     socket.on('ballPosition', (data) => {
-        ball.x += data.x;
+        ball.x -= data.x;
         ball.y += data.y;
 
         if (ball.x < 0) ball.x = 0;
