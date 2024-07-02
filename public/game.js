@@ -78,10 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Maze drawing
     function DrawMaze(Maze, ctx, cellsize, endSprite = null) {
+
+        console.log('Entered DrawMaze');
+
         var map = Maze.map;
         var cellSize = cellsize;
+
+        console.log(`cellsize: ${cellsize}`);
+
         var drawEndMethod;
         ctx.lineWidth = cellSize / 40;
+
+        console.log(`linewidth: ${ctx.lineWidth}`);
       
         this.redrawMaze = function (size) {
           cellSize = size;

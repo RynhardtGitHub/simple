@@ -16,8 +16,8 @@ let started = false;
 let currentMaze;
 
 // Difficulty progression
-let difficulty = 5;
-let difficultyAdd = 5;
+let difficulty = 50;
+let difficultyAdd = 70;
 
 app.use(express.static('public'));
 
