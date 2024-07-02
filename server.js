@@ -12,6 +12,8 @@ app.use(cors());
 // User and Data Management
 const globalDataAccumulator = [];
 const MAX_DATA_POINTS = 10;
+let started = false;
+let currentMaze;
 
 // Difficulty progression
 let difficulty = 5;
@@ -48,14 +50,20 @@ io.on('connection', (socket) => {
     });
 
     // Feed map to players
-    socket.on('start', () => {
-        let maze = new Maze(difficulty, difficulty);
+    if (!started) {
+        socket.on('start', () => {
+            let maze = new Maze(difficulty, difficulty);
 
-        console.log(`Emitting maze: ${JSON.stringify(maze)}`)
+            console.log(`Emitting maze: ${JSON.stringify(maze)}`)
 
-        io.emit('maze', maze);
+            io.emit('maze', maze);
 
-    });
+            started = true;
+            currentMaze = maze;
+        });
+    } else {
+        io.emit('maze', currentMaze);
+    }
 });
 
 const port = 8080;
