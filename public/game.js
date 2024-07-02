@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
     const messageElement = document.getElementById('message');
     let ball = null;
-    let mazeDrawer = null;
+    let currentMaze;
 
     // Setup start button
     const startButton = document.getElementById('startButton');
@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Receive map from server
     socket.on('maze', (maze) => {
         mazeDrawer = new DrawMaze(maze, ctx, canvas.width / maze.difficulty);
+        currentMaze = maze;
 
         console.log(`Maze received: \n${JSON.stringify(maze)}`);
         startButton.style.visibility = "hidden"; 
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDeviceMotion(event) {
         const acceleration = event.accelerationIncludingGravity;
         const data = { x: acceleration.x, y: acceleration.y };
-        console.log('Accelerometer data:', data);  // Debugging statement
+        // console.log('Accelerometer data:', data);  // Debugging statement
         socket.emit('accelerometerData', data);
     }
 
@@ -68,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Drawing
     function drawBall() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        DrawMaze(currentMaze, ctx, canvas.width / currentMaze.difficulty);
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         ctx.fillStyle = 'blue';
