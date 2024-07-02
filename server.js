@@ -9,20 +9,36 @@ const io = socketIo(server);
 const cors = require('cors');
 app.use(cors());
 
+// User and Data Management
+const globalDataAccumulator = [];
+const MAX_DATA_POINTS = 10;
+
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     console.log('a user connected');
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log('User disconnected');
     });
 
     socket.on('accelerometerData', (data) => {
-        // console.log(data);
+            globalDataAccumulator.push(data);
+        if (globalDataAccumulator.length > MAX_DATA_POINTS) {
+        globalDataAccumulator.shift(); // Remove oldest data
+        }
 
-        // socket.broadcast.emit('ballPosition', data);
-        // socket.emit('ballPosition', data);
+        // Calculate overall average from all users
+        const averageData = globalDataAccumulator.reduce((acc, curr) => {
+        acc.x += curr.x;
+        acc.y += curr.y;
+        acc.z += curr.z;
+        return acc;
+        }, { x: 0, y: 0, z: 0 });
+        averageData.x /= globalDataAccumulator.length;
+        averageData.y /= globalDataAccumulator.length;
+        averageData.z /= globalDataAccumulator.length;
+
         io.emit('ballPosition', data);
     });
 });
