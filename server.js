@@ -246,6 +246,7 @@ function Maze(Width, Height) {
     return {
         map: mazeMap,
         startCoord: startCoord,
-        endCoord: endCoord
+        endCoord: endCoord,
+        difficulty: difficulty
     }
   }

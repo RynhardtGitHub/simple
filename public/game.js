@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Receive map from server
     socket.on('maze', (maze) => {
-        mazeDrawer = new DrawMaze(maze, ctx, 20);
+        mazeDrawer = new DrawMaze(maze, ctx, canvas.width / maze.difficulty);
 
         console.log('Maze received');
         startButton.style.visibility = "hidden"; 
