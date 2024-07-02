@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('maze', (maze) => {
             mazeDrawer = new DrawMaze(maze, ctx, 20);
 
+            console.log('Maze received');
+
             // Initialize the ball
             ball = {
                 x: maze.startCoord.x,
