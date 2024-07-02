@@ -21,7 +21,8 @@ io.on('connection', (socket) => {
     socket.on('accelerometerData', (data) => {
         // console.log(data);
 
-        socket.broadcast.emit('ballPosition', data);
+        // socket.broadcast.emit('ballPosition', data);
+        socket.emit('ballPosition', data);
     });
 });
 
