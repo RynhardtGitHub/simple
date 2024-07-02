@@ -7,9 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let ball = null;
     let mazeDrawer = null;
 
-    // const initialX = canvas.width / 2;
-    // const initialY = canvas.height / 2;
-    // let ball = { x: initialX, y: initialY, radius: 10 };
+    // Setup start button
+    const startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', startGame);
+
+    function startGame() {
+        messageElement.textContent = "Game started!"; // Update the message
+        startButton.disabled = true; // Disable the button after starting
+
+        socket.emit('start');
+    }
+
+    // Setup maze
     socket.on('initialUpdate', (data) => {
         console.log('Received initialUpdate:', data);
         messageElement.textContent = data.message;
@@ -17,16 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Receive map from server
         socket.on('maze', (maze) => {
             mazeDrawer = new DrawMaze(maze, ctx, 20);
-        });
 
-        // Initialize the ball
-        ball = {
-            x: data.startCoord.x,
-            y: data.startCoord.y,
-            radius: 5, 
-            color: 'blue'
-        };
-        drawBall(ball); 
+            // Initialize the ball
+            ball = {
+                x: maze.startCoord.x,
+                y: maze.startCoord.y,
+                radius: 5, 
+                color: 'blue'
+            };
+            drawBall(ball); 
+        });
     });
 
     if (typeof DeviceMotionEvent.requestPermission === 'function') {

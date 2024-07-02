@@ -41,11 +41,21 @@
             margin-top: 20px; 
             font-family: sans-serif;
         }
+        #startButton { /* Style for the start button */
+            padding: 10px 20px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px; /* Add space between button and message */
+        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <p id="message">Waiting for connection...</p> 
+    <p id="message">Waiting for connection...</p>
+    <button id="startButton">Start Game</button>
 
     <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
     <script src="game.js"></script> </body>

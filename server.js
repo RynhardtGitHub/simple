@@ -50,7 +50,9 @@ io.on('connection', (socket) => {
     // Feed map to players
     socket.on('start', () => {
         let maze = new Maze(difficulty, difficulty);
+
         io.emit('maze', maze);
+
     });
 });
 
@@ -73,88 +75,170 @@ function shuffle(array) {
     return array;
 }
 
-class Maze {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-        this.dirs = ["n", "s", "e", "w"];
-        this.modDir = {
-        n: { y: -1, x: 0, o: "s" },
-        s: { y: 1, x: 0, o: "n" },
-        e: { y: 0, x: 1, o: "w" },
-        w: { y: 0, x: -1, o: "e" },
-        };
+function Maze(Width, Height) {
+    var mazeMap;
+    var width = Width;
+    var height = Height;
+    var startCoord, endCoord;
+    var dirs = ["n", "s", "e", "w"];
+    var modDir = {
+      n: {
+        y: -1,
+        x: 0,
+        o: "s",
+      },
+      s: {
+        y: 1,
+        x: 0,
+        o: "n",
+      },
+      e: {
+        y: 0,
+        x: 1,
+        o: "w",
+      },
+      w: {
+        y: 0,
+        x: -1,
+        o: "e",
+      },
+    };
 
-        this.mazeMap = this.generateMap();
-        this.startCoord = this.defineStartEnd()[0];
-        this.endCoord = this.defineStartEnd()[1];
-
-        this.generateMaze();
-    }
-
-    generateMap() {
-        return Array.from({ length: this.height }, () =>
-        Array.from({ length: this.width }, () => ({
-            n: false, s: false, e: false, w: false,
-            visited: false, priorPos: null
-        }))
-        );
-    }
-
-    defineStartEnd() {
-        const side = rand(4); // 0: top, 1: right, 2: bottom, 3: left
-        const isStartCorner = rand(2) === 0;
-
-        let startX = side === 3 ? this.width - 1 : 0;
-        let startY = side === 0 ? this.height - 1 : 0;
-        let endX = side === 1 ? this.width - 1 : 0;
-        let endY = side === 2 ? this.height - 1 : 0;
-
-        if (!isStartCorner) {
-        [startX, endX] = [endX, startX]; // Swap x-coords if not corner
+    // this.map = mazeMap;
+    // this.startCoord = startCoord;
+    // this.endCoord = endCoord;
+  
+    function genMap() {
+      mazeMap = new Array(height);
+      for (y = 0; y < height; y++) {
+        mazeMap[y] = new Array(width);
+        for (x = 0; x < width; ++x) {
+          mazeMap[y][x] = {
+            n: false,
+            s: false,
+            e: false,
+            w: false,
+            visited: false,
+            priorPos: null,
+          };
         }
-        if (side % 2 === 1) {
-        [startY, endY] = [endY, startY]; // Swap y-coords if on right/left
-        }
-
-        return [
-        { x: startX, y: startY },
-        { x: endX, y: endY },
-        ];
+      }
     }
-
-    generateMaze() {
-        let pos = { x: 0, y: 0 };
-        let cellsVisited = 1;
-        let numLoops = 0;
-        let maxLoops = 0;
-
-        while (cellsVisited < this.width * this.height) {
-        this.mazeMap[pos.y][pos.x].visited = true;
-
+  
+    function defineMaze() {
+      var isComp = false;
+      var move = false;
+      var cellsVisited = 1;
+      var numLoops = 0;
+      var maxLoops = 0;
+      var pos = {
+        x: 0,
+        y: 0,
+      };
+      var numCells = width * height;
+      while (!isComp) {
+        move = false;
+        mazeMap[pos.x][pos.y].visited = true;
+  
         if (numLoops >= maxLoops) {
-            shuffle(this.dirs);
-            maxLoops = Math.round(rand(this.height / 8));
-            numLoops = 0;
+          shuffle(dirs);
+          maxLoops = Math.round(rand(height / 8));
+          numLoops = 0;
         }
         numLoops++;
-
-        for (const dir of this.dirs) {
-            const nx = pos.x + this.modDir[dir].x;
-            const ny = pos.y + this.modDir[dir].y;
-            if (nx >= 0 && nx < this.width && ny >= 0 && ny < this.height && !this.mazeMap[ny][nx].visited) {
-            this.mazeMap[pos.y][pos.x][dir] = true;
-            this.mazeMap[ny][nx][this.modDir[dir].o] = true;
-            this.mazeMap[ny][nx].priorPos = pos;
-            pos = { x: nx, y: ny };
-            cellsVisited++;
-            break;
+        for (index = 0; index < dirs.length; index++) {
+          var direction = dirs[index];
+          var nx = pos.x + modDir[direction].x;
+          var ny = pos.y + modDir[direction].y;
+  
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            //Check if the tile is already visited
+            if (!mazeMap[nx][ny].visited) {
+              //Carve through walls from this tile to next
+              mazeMap[pos.x][pos.y][direction] = true;
+              mazeMap[nx][ny][modDir[direction].o] = true;
+  
+              //Set Currentcell as next cells Prior visited
+              mazeMap[nx][ny].priorPos = pos;
+              //Update Cell position to newly visited location
+              pos = {
+                x: nx,
+                y: ny,
+              };
+              cellsVisited++;
+              //Recursively call this method on the next tile
+              move = true;
+              break;
             }
+          }
         }
+  
         if (!move) {
-            pos = this.mazeMap[pos.y][pos.x].priorPos;
+          //  If it failed to find a direction,
+          //  move the current position back to the prior cell and Recall the method.
+          pos = mazeMap[pos.x][pos.y].priorPos;
         }
+        if (numCells == cellsVisited) {
+          isComp = true;
         }
+      }
     }
-}
+  
+    function defineStartEnd() {
+      switch (rand(4)) {
+        case 0:
+          startCoord = {
+            x: 0,
+            y: 0,
+          };
+          endCoord = {
+            x: height - 1,
+            y: width - 1,
+          };
+          break;
+        case 1:
+          startCoord = {
+            x: 0,
+            y: width - 1,
+          };
+          endCoord = {
+            x: height - 1,
+            y: 0,
+          };
+          break;
+        case 2:
+          startCoord = {
+            x: height - 1,
+            y: 0,
+          };
+          endCoord = {
+            x: 0,
+            y: width - 1,
+          };
+          break;
+        case 3:
+          startCoord = {
+            x: height - 1,
+            y: width - 1,
+          };
+          endCoord = {
+            x: 0,
+            y: 0,
+          };
+          break;
+      }
+    }
+  
+    genMap();
+    defineStartEnd();
+    defineMaze();
 
+    return {
+        map: mazeMap,
+        startCoord: startCoord,
+        endCoord: endCoord,
+        mazeMap: mazeMap,
+        width: width,
+        height: height
+    }
+  }
