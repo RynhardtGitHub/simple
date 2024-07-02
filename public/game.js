@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('maze', (maze) => {
         mazeDrawer = new DrawMaze(maze, ctx, canvas.width / maze.difficulty);
 
-        console.log('Maze received');
+        console.log(`Maze received: \n${JSON.stringify(maze)}`);
         startButton.style.visibility = "hidden"; 
         messageElement.style.visibility = "hidden"; 
 
