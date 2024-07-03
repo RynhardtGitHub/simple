@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
                 const pixelData = ctx.getImageData(x, y, 1, 1).data;
             
                 // Check if the pixel is black (or very dark)
-                if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
+                if (pixelData[0] < 100 && pixelData[1] < 100 && pixelData[2] < 100) {
                     console.log(`Collision detected!`);
                     // For now, a simple inversion of accelerometer data:
                     data.x = -data.x;
