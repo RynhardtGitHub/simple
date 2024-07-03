@@ -37,7 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // console.log(`Startcoords: ${JSON.stringify(maze.startCoord)}`);
         // console.log(`cellsize: ${cellsize}`);
+        drawBall(ball); 
+    });
 
+    // Send accelerometer data
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission().then(response => {
+            if (response === 'granted') {
+                window.addEventListener('devicemotion', handleDeviceMotion);
+            }
+        }).catch(console.error);
+    } else {
+        window.addEventListener('devicemotion', handleDeviceMotion);
+    }
+    function handleDeviceMotion(event) {
+        const acceleration = event.accelerationIncludingGravity;
+        const data = { x: acceleration.x, y: acceleration.y };
+        
         if (ball) {
             const ballCenterX = ball.x * cellsize + cellsize / 2;
             const ballCenterY = ball.y * cellsize + cellsize / 2;
@@ -61,23 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        drawBall(ball); 
-    });
 
-    // Send accelerometer data
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission().then(response => {
-            if (response === 'granted') {
-                window.addEventListener('devicemotion', handleDeviceMotion);
-            }
-        }).catch(console.error);
-    } else {
-        window.addEventListener('devicemotion', handleDeviceMotion);
-    }
-    function handleDeviceMotion(event) {
-        const acceleration = event.accelerationIncludingGravity;
-        const data = { x: acceleration.x, y: acceleration.y };
-        // console.log('Accelerometer data:', data);  // Debugging statement
         socket.emit('accelerometerData', data);
     }
 
