@@ -11,9 +11,10 @@ app.use(cors());
 
 // User and Data Management
 const globalDataAccumulator = [];
-const MAX_DATA_POINTS = 10;
+const MAX_DATA_POINTS = 20;
 let started = false;
 let currentMaze;
+let playerCount = 0;
 
 // Difficulty progression
 let difficulty = 5;
@@ -23,9 +24,16 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     console.log('a user connected');
+    playerCount += 1;
 
     socket.on('disconnect', () => {
         console.log('User disconnected');
+        playerCount -= 1;
+
+        if (playerCount == 0) {
+            started = false;
+            currentMaze = Null;
+        }
     });
 
     // Get players' data
