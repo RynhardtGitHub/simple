@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Receive map from server
     socket.on('maze', (maze) => {
-        mazeDrawer = new DrawMaze(maze, ctx, canvas.width / maze.difficulty);
+        let cellsize = canvas.width / maze.difficulty;
+        mazeDrawer = new DrawMaze(maze, ctx, cellsize);
         currentMaze = maze;
 
         console.log(`Maze received: \n${JSON.stringify(maze)}`);
@@ -30,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize the ball
         ball = {
-            x: maze.startCoord.x * canvas.width,
-            y: maze.startCoord.y * canvas.height,
+            x: maze.startCoord.x * cellsize,
+            y: maze.startCoord.y * cellsize,
             radius: 10, 
             color: 'blue'
         };
@@ -53,32 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = { x: acceleration.x, y: acceleration.y };
         // console.log('Accelerometer data:', data);  // Debugging statement
         socket.emit('accelerometerData', data);
-    }
-
-    // Resizing
-    function refitCanvas() {
-        // canvas.width = window.innerWidth;
-        // canvas.height = window.innerHeight;
-
-        // Center the canvas horizontally
-        const canvasX = (window.innerWidth - canvas.width) / 2;
-        canvas.style.left = `${canvasX}px`;
-
-        // Center the canvas vertically (you might not need this if using flexbox)
-        const canvasY = (window.innerHeight - canvas.height) / 2;
-        canvas.style.top = `${canvasY}px`;
-
-        // Redraw the maze if it has been initialized
-        // if (mazeDrawer) {
-        //     mazeDrawer.redrawMaze(calculateCellSize());
-        // }
-    }
-    
-    // Calculate cell size based on canvas dimensions
-    function calculateCellSize() {
-        const smallerDimension = Math.min(canvas.width, canvas.height);
-        const numCells = Math.max(currentMaze.width, currentMaze.height); // Use the larger of width/height
-        return Math.floor(smallerDimension / numCells);
     }
 
     // Position updating
