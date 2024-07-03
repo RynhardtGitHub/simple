@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize the ball
         ball = {
-            x: maze.startCoord.x,
-            y: maze.startCoord.y,
-            radius: 5, 
+            x: maze.startCoord.x * canvas.width,
+            y: maze.startCoord.y * canvas.height,
+            radius: 10, 
             color: 'blue'
         };
         drawBall(ball); 
