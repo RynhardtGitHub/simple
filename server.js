@@ -20,6 +20,8 @@ let started = false;
 let currentMaze;
 let playerCount = 0;
 let canvaswidth = 400;
+let canvas;
+let ctx;
 
 // Difficulty progression
 let difficulty = 5;
@@ -73,8 +75,8 @@ io.on('connection', (socket) => {
 
             io.emit('maze', maze);
 
-            const canvas = createCanvas(canvaswidth, canvaswidth);
-            const ctx = canvas.getContext('2d');
+            canvas = createCanvas(canvaswidth, canvaswidth);
+            ctx = canvas.getContext('2d');
             DrawMaze(maze,ctx,canvaswidth / difficulty);
 
             // console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
