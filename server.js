@@ -22,6 +22,7 @@ let playerCount = 0;
 let canvaswidth = 400;
 let canvas;
 let ctx;
+let cellsize;
 
 // Difficulty progression
 let difficulty = 5;
@@ -32,6 +33,7 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
     console.log('a user connected');
     playerCount += 1;
+    cellsize = canvaswidth / difficulty;
 
     socket.on('disconnect', () => {
         playerCount -= 1;
@@ -54,7 +56,7 @@ io.on('connection', (socket) => {
 
             canvas = createCanvas(canvaswidth, canvaswidth);
             ctx = canvas.getContext('2d');
-            DrawMaze(maze,ctx,canvaswidth / difficulty);
+            DrawMaze(maze,ctx,cellsize);
 
             // console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
 
@@ -82,6 +84,29 @@ io.on('connection', (socket) => {
         averageData.x /= globalDataAccumulator.length;
         averageData.y /= globalDataAccumulator.length;
         averageData.z /= globalDataAccumulator.length;
+
+        // Collision detection
+        if (ctx) {
+            const ballCenterX = ball.x * cellsize + cellsize / 2;
+            const ballCenterY = ball.y * cellsize + cellsize / 2;
+            const radius = ball.radius;
+            for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
+                const x = ballCenterX + radius * Math.cos(angle);
+                const y = ballCenterY + radius * Math.sin(angle);
+            
+                // Get pixel data at the point
+                const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            
+                // Check if the pixel is black (or very dark)
+                if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
+                    console.log(`Collision detected!`);
+                    // For now, a simple inversion of accelerometer data:
+                    data.x = -data.x;
+                    data.y = -data.y;
+                    break; // Stop checking once a collision is found
+                }
+            }
+        }
 
         io.emit('ballPosition', data);
 
