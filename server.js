@@ -43,29 +43,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Get players' data
-    socket.on('accelerometerData', (data) => {
-        globalDataAccumulator.push(data);
-        if (globalDataAccumulator.length > MAX_DATA_POINTS) {
-        globalDataAccumulator.shift(); // Remove oldest data
-        }
-
-        // Calculate overall average from all users
-        const averageData = globalDataAccumulator.reduce((acc, curr) => {
-            acc.x += curr.x;
-            acc.y += curr.y;
-            acc.z += curr.z;
-            return acc;
-        }, { x: 0, y: 0, z: 0 });
-        averageData.x /= globalDataAccumulator.length;
-        averageData.y /= globalDataAccumulator.length;
-        averageData.z /= globalDataAccumulator.length;
-
-        io.emit('ballPosition', data);
-
-        console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
-    });
-
     // Feed map to players
     if (!started) {
         socket.on('start', () => {
@@ -83,6 +60,29 @@ io.on('connection', (socket) => {
 
             started = true;
             currentMaze = maze;
+
+            // Get players' data
+            socket.on('accelerometerData', (data) => {
+                globalDataAccumulator.push(data);
+                if (globalDataAccumulator.length > MAX_DATA_POINTS) {
+                globalDataAccumulator.shift(); // Remove oldest data
+                }
+
+                // Calculate overall average from all users
+                const averageData = globalDataAccumulator.reduce((acc, curr) => {
+                    acc.x += curr.x;
+                    acc.y += curr.y;
+                    acc.z += curr.z;
+                    return acc;
+                }, { x: 0, y: 0, z: 0 });
+                averageData.x /= globalDataAccumulator.length;
+                averageData.y /= globalDataAccumulator.length;
+                averageData.z /= globalDataAccumulator.length;
+
+                io.emit('ballPosition', data);
+
+                console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
+            });
         });
     } else {
         io.emit('maze', currentMaze);
