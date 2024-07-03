@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.style.visibility = "hidden"; 
         messageElement.style.visibility = "hidden"; 
 
-        // refitCanvas();
-
         // Initialize the ball
         ball = {
             x: maze.startCoord.x * cellsize,
@@ -36,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
             radius: 10, 
             color: 'blue'
         };
+
+        console.log(`Startcoords: ${JSON.stringify(maze.startCoord)}`);
+        console.log(`cellsize: ${cellsize}`);
         drawBall(ball); 
     });
 
