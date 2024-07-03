@@ -51,10 +51,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('devicemotion', handleDeviceMotion);
     }
     function handleDeviceMotion(event) {
+        console.log(`Device motion event.`);
+
         const acceleration = event.accelerationIncludingGravity;
         const data = { x: acceleration.x, y: acceleration.y };
         
         if (ball) {
+            console.log(`Ball exists.`);
+
             const ballCenterX = ball.x * cellsize + cellsize / 2;
             const ballCenterY = ball.y * cellsize + cellsize / 2;
         
@@ -69,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
                 // Check if the pixel is black (or very dark)
                 if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
-                    // Collision detected!
+                    console.log(`Collision detected!`);
                     // For now, a simple inversion of accelerometer data:
                     data.x = -data.x;
                     data.y = -data.y;
