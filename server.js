@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
 
                 io.emit('ballPosition', data);
 
-                console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
+                // console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
             });
         });
     } else {
