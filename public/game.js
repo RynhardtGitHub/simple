@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.style.visibility = "hidden"; 
         messageElement.style.visibility = "hidden"; 
 
-        refitCanvas();
+        // refitCanvas();
 
         // Initialize the ball
         ball = {
