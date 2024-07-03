@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Calculate cell size based on canvas dimensions
     function calculateCellSize() {
         const smallerDimension = Math.min(canvas.width, canvas.height);
-        const numCells = Math.max(maze.width, maze.height); // Use the larger of width/height
+        const numCells = Math.max(currentMaze.width, currentMaze.height); // Use the larger of width/height
         return Math.floor(smallerDimension / numCells);
     }
 
