@@ -87,9 +87,9 @@ io.on('connection', (socket) => {
 
         // Collision detection
         if (ctx) {
-            const ballCenterX = ball.x * cellsize + cellsize / 2;
-            const ballCenterY = ball.y * cellsize + cellsize / 2;
-            const radius = ball.radius;
+            const ballCenterX = averageData.x * cellsize + cellsize / 2;
+            const ballCenterY = averageData.y * cellsize + cellsize / 2;
+            const radius = averageData.radius;
             for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
                 const x = ballCenterX + radius * Math.cos(angle);
                 const y = ballCenterY + radius * Math.sin(angle);
