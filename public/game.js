@@ -38,6 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // console.log(`Startcoords: ${JSON.stringify(maze.startCoord)}`);
         // console.log(`cellsize: ${cellsize}`);
         drawBall(ball); 
+
+        // Position updating allowed only after ball has been created
+        socket.on('ballPosition', (data) => {
+            ball.x -= data.x;
+            ball.y += data.y;
+
+            if (ball.x < 0) ball.x = 0;
+            if (ball.x > canvas.width) ball.x = canvas.width;
+            if (ball.y < 0) ball.y = 0;
+            if (ball.y > canvas.height) ball.y = canvas.height;
+
+            drawBall();
+        });
     });
 
     // Send accelerometer data
@@ -84,19 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         socket.emit('accelerometerData', data);
     }
-
-    // Position updating
-    socket.on('ballPosition', (data) => {
-        ball.x -= data.x;
-        ball.y += data.y;
-
-        if (ball.x < 0) ball.x = 0;
-        if (ball.x > canvas.width) ball.x = canvas.width;
-        if (ball.y < 0) ball.y = 0;
-        if (ball.y > canvas.height) ball.y = canvas.height;
-
-        drawBall();
-    });
 
     // Drawing
     function drawBall() {
