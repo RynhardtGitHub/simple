@@ -101,9 +101,12 @@ io.on('connection', (socket) => {
                 if (pixelData[0] < 100 && pixelData[1] < 100 && pixelData[2] < 100) {
                     console.log(`Collision detected!`);
                     // For now, a simple inversion of accelerometer data:
+                    data.x = data.x;
+                    data.y = data.y;
+                    break; // Stop checking once a collision is found
+                } else {
                     data.x = -data.x;
                     data.y = -data.y;
-                    break; // Stop checking once a collision is found
                 }
             }
         }
