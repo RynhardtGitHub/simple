@@ -69,31 +69,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const acceleration = event.accelerationIncludingGravity;
         const data = { x: acceleration.x, y: acceleration.y };
         
-        if (ball) {
-            console.log(`Ball exists.`);
+        // if (ball) {
+        //     console.log(`Ball exists.`);
 
-            const ballCenterX = ball.x * cellsize + cellsize / 2;
-            const ballCenterY = ball.y * cellsize + cellsize / 2;
+        //     const ballCenterX = ball.x * cellsize + cellsize / 2;
+        //     const ballCenterY = ball.y * cellsize + cellsize / 2;
         
-            // Check pixels around the ball's circumference for collisions
-            const radius = ball.radius;
-            for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
-                const x = ballCenterX + radius * Math.cos(angle);
-                const y = ballCenterY + radius * Math.sin(angle);
+        //     // Check pixels around the ball's circumference for collisions
+        //     const radius = ball.radius;
+        //     for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
+        //         const x = ballCenterX + radius * Math.cos(angle);
+        //         const y = ballCenterY + radius * Math.sin(angle);
             
-                // Get pixel data at the point
-                const pixelData = ctx.getImageData(x, y, 1, 1).data;
+        //         // Get pixel data at the point
+        //         const pixelData = ctx.getImageData(x, y, 1, 1).data;
             
-                // Check if the pixel is black (or very dark)
-                if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
-                    console.log(`Collision detected!`);
-                    // For now, a simple inversion of accelerometer data:
-                    data.x = -data.x;
-                    data.y = -data.y;
-                    break; // Stop checking once a collision is found
-                }
-            }
-        }
+        //         // Check if the pixel is black (or very dark)
+        //         if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
+        //             console.log(`Collision detected!`);
+        //             // For now, a simple inversion of accelerometer data:
+        //             data.x = -data.x;
+        //             data.y = -data.y;
+        //             break; // Stop checking once a collision is found
+        //         }
+        //     }
+        // }
 
         socket.emit('accelerometerData', data);
     }
