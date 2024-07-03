@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Resizing
     function refitCanvas() {
-        canvas.width = window.innerWidth;  // Set canvas width to window width
-        canvas.height = window.innerHeight; // Set canvas height to window height
+        // canvas.width = window.innerWidth;
+        // canvas.height = window.innerHeight;
 
         // Center the canvas horizontally
         const canvasX = (window.innerWidth - canvas.width) / 2;
@@ -69,9 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
         canvas.style.top = `${canvasY}px`;
 
         // Redraw the maze if it has been initialized
-        if (mazeDrawer) {
-            mazeDrawer.redrawMaze(calculateCellSize());
-        }
+        // if (mazeDrawer) {
+        //     mazeDrawer.redrawMaze(calculateCellSize());
+        // }
     }
     
     // Calculate cell size based on canvas dimensions
