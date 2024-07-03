@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
 
             io.emit('maze', maze);
 
-            canvas = createCanvas(canvaswidth, canvaswidth);
+            if (!canvas) canvas = createCanvas(canvaswidth, canvaswidth);
             ctx = canvas.getContext('2d');
             DrawMaze(maze,ctx,cellsize);
 
