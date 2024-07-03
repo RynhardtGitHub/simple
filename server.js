@@ -20,9 +20,11 @@ let started = false;
 let currentMaze;
 let playerCount = 0;
 let canvaswidth = 400;
+let radius = 10;
 let canvas;
 let ctx;
 let cellsize;
+let ball_location;
 
 // Difficulty progression
 let difficulty = 5;
@@ -58,6 +60,8 @@ io.on('connection', (socket) => {
             ctx = canvas.getContext('2d');
             DrawMaze(maze,ctx,cellsize);
 
+            ball_location = {x:maze.startCoord.x * cellsize, y:maze.startCoord.y * cellsize};
+
             // console.log(`Virtual canvas: ${(ctx.getImageData(0,0,canvaswidth,canvaswidth).data)}`);
 
             started = true;
@@ -87,9 +91,8 @@ io.on('connection', (socket) => {
 
         // Collision detection
         if (ctx) {
-            const ballCenterX = averageData.x * cellsize + cellsize / 2;
-            const ballCenterY = averageData.y * cellsize + cellsize / 2;
-            const radius = averageData.radius;
+            const ballCenterX = ball_location.x * cellsize + cellsize / 2;
+            const ballCenterY = ball_location.y * cellsize + cellsize / 2;
             for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
                 const x = ballCenterX + radius * Math.cos(angle);
                 const y = ballCenterY + radius * Math.sin(angle);
@@ -110,6 +113,9 @@ io.on('connection', (socket) => {
                 }
             }
         }
+
+        ball_location.x += data.x;
+        ball_location.y += data.y;
 
         io.emit('ballPosition', data);
 
