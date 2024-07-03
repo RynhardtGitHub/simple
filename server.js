@@ -112,10 +112,9 @@ io.on('connection', (socket) => {
                     data.y = -data.y;
                 }
             }
+            ball_location.x += data.x;
+            ball_location.y += data.y;
         }
-
-        ball_location.x += data.x;
-        ball_location.y += data.y;
 
         io.emit('ballPosition', data);
 
