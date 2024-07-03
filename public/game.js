@@ -35,8 +35,32 @@ document.addEventListener('DOMContentLoaded', () => {
             color: 'blue'
         };
 
-        console.log(`Startcoords: ${JSON.stringify(maze.startCoord)}`);
-        console.log(`cellsize: ${cellsize}`);
+        // console.log(`Startcoords: ${JSON.stringify(maze.startCoord)}`);
+        // console.log(`cellsize: ${cellsize}`);
+
+        if (ball) {
+            const ballCenterX = ball.x * cellsize + cellsize / 2;
+            const ballCenterY = ball.y * cellsize + cellsize / 2;
+        
+            // Check pixels around the ball's circumference for collisions
+            const radius = ball.radius;
+            for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) { // Check 16 points around the circle
+                const x = ballCenterX + radius * Math.cos(angle);
+                const y = ballCenterY + radius * Math.sin(angle);
+            
+                // Get pixel data at the point
+                const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            
+                // Check if the pixel is black (or very dark)
+                if (pixelData[0] < 50 && pixelData[1] < 50 && pixelData[2] < 50) {
+                    // Collision detected!
+                    // For now, a simple inversion of accelerometer data:
+                    data.x = -data.x;
+                    data.y = -data.y;
+                    break; // Stop checking once a collision is found
+                }
+            }
+        }
         drawBall(ball); 
     });
 
