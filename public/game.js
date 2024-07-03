@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Initialize the ball
         ball = {
-            x: maze.startCoord.x * cellsize,
-            y: maze.startCoord.y * cellsize,
+            x: maze.startCoord.x * cellsize + cellsize/2,
+            y: maze.startCoord.y * cellsize + cellsize/2,
             radius: 10, 
             color: 'blue'
         };
