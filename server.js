@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
 
         if (playerCount == 0) {
             started = false;
-            currentMaze = Null;
+            currentMaze = null;
         }
     });
 
