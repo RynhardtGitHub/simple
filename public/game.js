@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
           var x = xCord * cellSize;
           var y = yCord * cellSize;
 
-          console.log(`drawCell: ${x, y}`);
+        //   console.log(`drawCell: ${x, y}`);
       
           if (cell.n == false) {
             ctx.beginPath();

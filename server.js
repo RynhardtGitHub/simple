@@ -27,8 +27,8 @@ io.on('connection', (socket) => {
     playerCount += 1;
 
     socket.on('disconnect', () => {
-        console.log('User disconnected');
         playerCount -= 1;
+        console.log(`User disconnected: ${playerCount} players left.`);
 
         if (playerCount == 0) {
             started = false;
