@@ -31,12 +31,19 @@
             font-size: 16px;
             margin-top: 10px; /* Add space between button and message */
         }
+        #gameContainer {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center;   /* Center horizontally */
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <p id="message">Waiting for connection...</p>
-    <button id="startButton">Start Game</button>
+    <div id="gameContainer"> 
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <p id="message">Waiting for connection...</p>
+        <button id="startButton">Start Game</button>
+    </div>
 
     <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
     <script src="game.js"></script> </body>
