@@ -38,17 +38,17 @@ io.on('connection', (socket) => {
 
     // Get players' data
     socket.on('accelerometerData', (data) => {
-            globalDataAccumulator.push(data);
+        globalDataAccumulator.push(data);
         if (globalDataAccumulator.length > MAX_DATA_POINTS) {
         globalDataAccumulator.shift(); // Remove oldest data
         }
 
         // Calculate overall average from all users
         const averageData = globalDataAccumulator.reduce((acc, curr) => {
-        acc.x += curr.x;
-        acc.y += curr.y;
-        acc.z += curr.z;
-        return acc;
+            acc.x += curr.x;
+            acc.y += curr.y;
+            acc.z += curr.z;
+            return acc;
         }, { x: 0, y: 0, z: 0 });
         averageData.x /= globalDataAccumulator.length;
         averageData.y /= globalDataAccumulator.length;

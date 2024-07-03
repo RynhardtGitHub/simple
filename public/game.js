@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup start button
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', startGame);
-
     function startGame() {
         messageElement.textContent = "Game started!"; // Update the message
         startButton.disabled = true; // Disable the button after starting
@@ -27,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         startButton.style.visibility = "hidden"; 
         messageElement.style.visibility = "hidden"; 
 
+        refitCanvas();
+
         // Initialize the ball
         ball = {
             x: maze.startCoord.x,
@@ -37,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawBall(ball); 
     });
 
+    // Send accelerometer data
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
         DeviceMotionEvent.requestPermission().then(response => {
             if (response === 'granted') {
@@ -46,12 +48,37 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         window.addEventListener('devicemotion', handleDeviceMotion);
     }
-
     function handleDeviceMotion(event) {
         const acceleration = event.accelerationIncludingGravity;
         const data = { x: acceleration.x, y: acceleration.y };
         // console.log('Accelerometer data:', data);  // Debugging statement
         socket.emit('accelerometerData', data);
+    }
+
+    // Resizing
+    function refitCanvas() {
+        canvas.width = window.innerWidth;  // Set canvas width to window width
+        canvas.height = window.innerHeight; // Set canvas height to window height
+
+        // Center the canvas horizontally
+        const canvasX = (window.innerWidth - canvas.width) / 2;
+        canvas.style.left = `${canvasX}px`;
+
+        // Center the canvas vertically (you might not need this if using flexbox)
+        const canvasY = (window.innerHeight - canvas.height) / 2;
+        canvas.style.top = `${canvasY}px`;
+
+        // Redraw the maze if it has been initialized
+        if (mazeDrawer) {
+            mazeDrawer.redrawMaze(calculateCellSize());
+        }
+    }
+    
+    // Calculate cell size based on canvas dimensions
+    function calculateCellSize() {
+        const smallerDimension = Math.min(canvas.width, canvas.height);
+        const numCells = Math.max(maze.width, maze.height); // Use the larger of width/height
+        return Math.floor(smallerDimension / numCells);
     }
 
     // Position updating
